@@ -50,6 +50,17 @@ def get_project(iid):
     else:
         raise CustomError("{} provider isn't avaible".format(obj.provider))
 
+@api.route('/projects/<int:iid>', methods=['DELETE'])
+def delete_project(iid):
+    try :
+        name = _list_project()[iid - 1]
+    except :
+        raise CustomError("projects {} didn't exist, sorry".format(iid))
+
+    os.remove(name)
+
+    return toJson("iid : {}".format(iid))
+
 
 def _list_project():
     ret_list = list()
