@@ -25,7 +25,9 @@ issue
 	url, 
 	author , 
 	state , 
-	milestone
+	milestone,
+        created,
+        update_at
 }
 
 
