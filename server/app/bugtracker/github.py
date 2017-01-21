@@ -5,13 +5,14 @@ from .abstract import AbstractTrack, Issue
 
 
 
-class Github(Abstract):
+class Github(AbstractTrack):
 
     def __init__(self, url, provider):
-        super().__init__()
+        super().__init__(url, provider)
         self.provider = "github"
-        self.__github_user = self.url.split("/")[4]
-        self.__github_repo = self.url.split("/")[5]
+        print(self.url.split("/"))
+        self.__github_user = self.url.split("/")[3]
+        self.__github_repo = self.url.split("/")[4]
 
     def issues(self, **args):
         r = requests.get("https://api.github.com/repos/{}/{}/issues"
@@ -37,7 +38,7 @@ class Github(Abstract):
     def users(self, **args):
         return "required authentification"
 
-    def users(self. **iid):
+    def users(self, **iid):
         return "required authentification"
 
     def milestone(self, **args):

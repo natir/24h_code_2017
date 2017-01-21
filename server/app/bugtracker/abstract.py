@@ -28,9 +28,9 @@ class Milestone(AbstractObject):
 
 class AbstractTrack:
     def __init__(self, url, provider):
-         self.name = "project_name";
-        self.provider = "provider_name"
-        self.url = "http://localhost"
+        self.name = "project_name"
+        self.provider = provider
+        self.url = url
         self.description = ""
         self.date_created = ""
 
