@@ -38,16 +38,16 @@ class AbstractTrack(AbstractObject):
     def issues(self, **args):
         pass
 
-    def issues(self, iid):
+    def issue(self, iid):
         pass
 
     def users(self, **args):
         pass
 
-    def users(self, iid):
+    def user(self, iid):
         pass
 
-    def milestone(self, **args):
+    def milestones(self, **args):
         pass
 
     def milestone(self, iid):

@@ -16,32 +16,32 @@ class Github(AbstractTrack):
 
     def issues(self, **args):
         r = requests.get("https://api.github.com/repos/{}/{}/issues"
-                        .format(self.github_user, self.github_repo))
+                        .format(self.__github_user, self.__github_repo))
         
         issues = list()
         for val in r.json():
             i = Issue()
             i.title = val["title"]
-            i.description = val["description"]
-            i.url = val["http_url"]
+            i.description = val["body"]
+            i.url = val["html_url"]
             i.author = val["user"]
             i.state = val["state"]
             i.created = val["created_at"]
-            i.update_at = ["update_at"]
-            issues.append(i)
+            i.update_at = val["updated_at"]
+            issues.append(i.to_dict())
 
         return issues
 
-    def issues(self, iid):
+    def issue(self, iid):
         return self.issues[iid];
 
     def users(self, **args):
         return "required authentification"
 
-    def users(self, **iid):
+    def user(self, **iid):
         return "required authentification"
 
-    def milestone(self, **args):
+    def milestones(self, **args):
         r = requests.get("https://api.github.com/repos/{}/{}/milestones"
                         .format(self.github_user, self.github_repo))
         

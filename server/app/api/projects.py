@@ -38,18 +38,8 @@ def create_project():
 
 @api.route('/projects/<int:iid>', methods=['GET'])
 def get_project(iid):
-    try :
-        name = _list_project()[iid - 1]
-    except :
-        raise CustomError("projects {} didn't exist, sorry".format(iid))
- 
-    obj = AbstractTrack.read(name)
-                          
-    if obj.provider == "github":
-        return toJson(Github.read(name).to_dict())
-    else:
-        raise CustomError("{} provider isn't avaible".format(obj.provider))
-
+    return(toJson(_get_project(iid).to_dict()))
+    
 @api.route('/projects/<int:iid>', methods=['DELETE'])
 def delete_project(iid):
     try :
@@ -60,6 +50,25 @@ def delete_project(iid):
     os.remove(name)
 
     return toJson("iid : {}".format(iid))
+
+@api.route('/projects/<int:iid>/issues', methods=['GET'])
+def get_issues(iid):
+    project = _get_project(iid)
+
+    return toJson(project.issues())
+
+def _get_project(iid):
+    try :
+        name = _list_project()[iid - 1]
+    except :
+        raise CustomError("projects {} didn't exist, sorry".format(iid))
+ 
+    obj = AbstractTrack.read(name)
+                          
+    if obj.provider == "github":
+        return Github.read(name)
+    else:
+        raise CustomError("{} provider isn't avaible".format(obj.provider))
 
 
 def _list_project():
