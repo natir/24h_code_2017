@@ -1,6 +1,6 @@
 import json
 import requests
-
+from datetime import datetime
 from .abstract import AbstractTrack, Issue, Milestone
 
 class Github(AbstractTrack):
@@ -63,11 +63,16 @@ class Github(AbstractTrack):
 
     def code(self, **args):
         r = requests.get("https://api.github.com/repos/{}/{}/stats/code_frequency".
-                         format(self.github_user, self.github_repo))
-        reponse = dict()
+                         format(self.__github_user, self.__github_repo))
+        reponse = list()
 
         for val in r.json():
-            reponse["date"] = datetime(val[0])
-            reponse["add"] = datetime(val[1])
-            reponse["del"] = datetime(val[2])
+            r = dict()
+            date = datetime.fromtimestamp(val[0])
+            r["date"] = str(date.isocalendar()[1])+" "+str(date.year)
+            r["add"] = val[1]
+            r["del"] = val[2]
+            reponse.append(r)
+
+        return reponse
 

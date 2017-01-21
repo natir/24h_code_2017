@@ -9,8 +9,7 @@
 /projets/{id}/users/{id} [GET]
 /projets/{id}/milestone/ [GET]
 /projets/{id}/milestone/{id} [GET]
-/projets/{id}/code/input [GET]
-/projets/{id}/code/output [GET]
+/projets/{id}/code/ [GET]
 
 projet 
 {

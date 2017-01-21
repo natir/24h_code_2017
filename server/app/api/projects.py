@@ -83,6 +83,12 @@ def get_milestone(iid, mil_id):
         raise CustomError("milestone {} didn't exist in project {}, sorry"
                          .format(mil_id, iid))
 
+@api.route('/projects/<int:iid>/code')
+def get_code_freq(iid):
+    project = _get_project(iid)
+
+    return toJson(project.code())
+
 def _get_project(iid):
     try :
         name = _list_project()[iid - 1]
