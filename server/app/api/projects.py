@@ -13,6 +13,7 @@ from io import StringIO,BytesIO
 from ..bugtracker.abstract import AbstractTrack
 from ..bugtracker.github import Github
 from ..bugtracker.bugzilla import Bugzilla
+from ..bugtracker.fake import Fake
 from datetime import datetime, timedelta
 
 #================================================================================
@@ -31,7 +32,8 @@ def create_project():
         project = Github(post["track_url"], "github")
     elif post["provider"] == "bugzilla":
         project = Bugzilla(post["track_url"], "bugzilla")
-        
+    elif post["provider"] == "fake":
+        project = Fake(post["track_url"], "fake")
     else:
         raise CustomError("{} provider isn't avaible".format(post["provider"]))
 
@@ -134,6 +136,8 @@ def _get_project(iid):
         return Github.read(name)
     elif obj.provider == "bugzilla":
         return Bugzilla.read(name)
+    elif obj.provider == "fake":
+        return Fake.read(name)
     else:
         raise CustomError("{} provider isn't avaible".format(obj.provider))
 
