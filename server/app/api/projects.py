@@ -17,7 +17,10 @@ from datetime import datetime
 #================================================================================
 @api.route('/projects/', methods=['GET'])
 def get_projects():
-    return toJson(_list_project())
+    ret_list = list()
+    for i in range(0, len(_list_project())):
+        ret_list.append(_get_project(i).to_dict())
+    return toJson(ret_list)
 
 #================================================================================
 @api.route('/projects/', methods=['POST'])
