@@ -1,0 +1,32 @@
+/projets [GET]
+/projets [POST]
+/projets/{id} [GET]
+/projets/{id} [DELETE]
+
+/projets/{id}/issues [GET]
+/projets/{id}/issues/{id}[GET]
+/projets/{id}/users/ [GET]
+/projets/{id}/users/{id} [GET]
+/projets/{id}/milestone/ [GET]
+/projets/{id}/milestone/{id} [GET]
+/projets/{id}/code/input [GET]
+/projets/{id}/code/output [GET]
+
+projet 
+{
+	name: "projet"
+	type:"bugtrackers"
+	url : "http://tructruc"
+}
+
+issue 
+{
+	title,
+	url, 
+	author , 
+	state , 
+	milestone
+}
+
+
+
