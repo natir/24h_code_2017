@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 
 
 
-qmlRegisterType<Request>("org.labsquare", 1, 0, "Request");
+   qmlRegisterType<Request>("org.labsquare", 1, 0, "Request");
 
     QQmlApplicationEngine engine;
 

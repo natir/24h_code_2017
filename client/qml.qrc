@@ -1,8 +1,10 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>TestPage.qml</file>
+        <file>MainPage.qml</file>
         <file>Test2Page.qml</file>
         <file>StatComponent.qml</file>
+        <file>FormDialog.qml</file>
+        <file>NumComponent.qml</file>
     </qresource>
 </RCC>

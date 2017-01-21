@@ -12,6 +12,8 @@ ApplicationWindow {
     width : 1200
     height : 600
 
+   // visibility: Window.FullScreen
+
 
 
     theme {
@@ -21,6 +23,6 @@ ApplicationWindow {
     }
 
 
-    initialPage: TestPage{}
+    initialPage: MainPage{}
 
 }
