@@ -73,6 +73,25 @@ def get_issue(iid, issue_id):
         raise CustomError("issue {} didn't exist in project {}, sorry"
                           .format(issue_id, iid))
 
+@api.route('/projects/<int:iid>/commits', methods=['GET'])
+def get_commits(iid):
+    project = _get_project(iid)
+
+    date_filter = request.args.get('filter', None)
+    param_filter = request.args.get('param', "date")
+
+    return toJson(_filter_by_date(project.commits(), param_filter, date_filter))
+
+@api.route('/projects/<int:iid>/commits/<int:commit_id>', methods=['GET'])
+def get_commit(iid, commit_id):
+    project = _get_project(iid)
+
+    try:
+        return toJson(project.commit(commit_id))
+    except :
+        raise CustomError("commit {} didn't exist in project {}, sorry"
+                          .format(issue_id, iid))
+
 @api.route('/projects/<int:iid>/milestone', methods=['GET'])
 def get_milestones(iid):
     project = _get_project(iid)

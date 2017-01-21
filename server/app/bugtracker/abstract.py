@@ -26,6 +26,12 @@ class Milestone(AbstractObject):
         self.open_issue = ""
         self.close_issue = ""
 
+class Commit(AbstractObject):
+    def __init__(self):
+        self.message = ""
+        self.author = ""
+        self.date = ""
+
 class AbstractTrack(AbstractObject):
     def __init__(self, url, provider):
         self.name = "project_name"
@@ -38,6 +44,12 @@ class AbstractTrack(AbstractObject):
         pass
 
     def issue(self, iid):
+        pass
+
+    def commits(self, **args):
+        pass
+
+    def commit(self, iid):
         pass
 
     def users(self, **args):

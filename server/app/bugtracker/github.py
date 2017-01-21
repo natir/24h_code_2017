@@ -1,7 +1,7 @@
 import json
 import requests
 from datetime import datetime
-from .abstract import AbstractTrack, Issue, Milestone
+from .abstract import AbstractTrack, Issue, Milestone, Commit
 
 class Github(AbstractTrack):
 
@@ -38,10 +38,28 @@ class Github(AbstractTrack):
     def issue(self, iid):
         return self.issues()[iid];
 
+    def commits(self, **args):
+        r = requests.get("https://api.github.com/repos/{}/{}/commits"
+                         .format(self.__github_user, self.__github_repo))
+
+        commits = list()
+        for val in r.json():
+            c = Commit()
+            c.message = val["commit"]["message"]
+            c.author = val["commit"]["author"]["name"]
+            c.date = datetime.strptime(val["commit"]["author"]["date"],
+                                       "%Y-%m-%dT%H:%M:%SZ")
+            commits.append(c.to_dict())
+
+        return commits
+
+    def commit(self, iid):
+        return self.commits()[iid]
+
     def users(self, **args):
         return "required authentification"
 
-    def user(self, **iid):
+    def user(self, iid):
         return "required authentification"
 
     def milestones(self, **args):
