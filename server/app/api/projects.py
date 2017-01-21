@@ -12,6 +12,7 @@ from io import StringIO,BytesIO
 
 from ..bugtracker.abstract import AbstractTrack
 from ..bugtracker.github import Github
+from ..bugtracker.bugzilla import Bugzilla
 from datetime import datetime, timedelta
 
 #================================================================================
@@ -28,16 +29,18 @@ def create_project():
     post = request.json
     if post["provider"] == "github":
         project = Github(post["track_url"], "github")
-        project.url = post["track_url"]
-        project.name = post["name"]
-        project.description = post["description"]
-        project.date_created = datetime.now()
-        project.write()
-        return toJson(post)
+    elif post["provider"] == "bugzilla":
+        project = Bugzilla(post["track_url"], "bugzilla")
+        
     else:
         raise CustomError("{} provider isn't avaible".format(post["provider"]))
 
-    return True
+    project.name = post["name"]
+    project.description = post["description"]
+    project.date_created = datetime.now()
+    project.write()
+    return toJson(post)
+
 
 @api.route('/projects/<int:iid>', methods=['GET'])
 def get_project(iid):
@@ -129,6 +132,8 @@ def _get_project(iid):
  
     if obj.provider == "github":
         return Github.read(name)
+    elif obj.provider == "bugzilla":
+        return Bugzilla.read(name)
     else:
         raise CustomError("{} provider isn't avaible".format(obj.provider))
 
