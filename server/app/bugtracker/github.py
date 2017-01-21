@@ -33,7 +33,7 @@ class Github(AbstractTrack):
         return issues
 
     def issue(self, iid):
-        return self.issues[iid];
+        return self.issues()[iid];
 
     def users(self, **args):
         return "required authentification"

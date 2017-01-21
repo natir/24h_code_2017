@@ -57,6 +57,17 @@ def get_issues(iid):
 
     return toJson(project.issues())
 
+@api.route('/projects/<int:iid>/issues/<int:issue_id>', methods=['GET'])
+def get_issue(iid, issue_id):
+    project = _get_project(iid)
+
+    try:
+        return toJson(project.issue(issue_id))
+    except :
+        raise CustomError("issue {} didn't exist in project {}, sorry"
+                          .format(issue_id, iid))
+
+
 def _get_project(iid):
     try :
         name = _list_project()[iid - 1]
@@ -69,7 +80,6 @@ def _get_project(iid):
         return Github.read(name)
     else:
         raise CustomError("{} provider isn't avaible".format(obj.provider))
-
 
 def _list_project():
     ret_list = list()
