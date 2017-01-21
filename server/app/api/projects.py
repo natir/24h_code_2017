@@ -10,19 +10,14 @@ import argparse
 import tempfile
 from io import StringIO,BytesIO
 
+from ..bugtracker.abstract import AbstractTrack
 from ..bugtracker.github import Github
 from datetime import datetime
 
 #================================================================================
 @api.route('/projects/', methods=['GET'])
 def get_projects():
-    ret_list = list()
-
-    for entry in os.scandir("."):
-        if entry.is_file() and entry.name.endswith(".pickle"):
-            ret_list.append(entry.name)
-    
-    return toJson(ret_list)
+    return toJson(_list_project())
 
 #================================================================================
 @api.route('/projects/', methods=['POST'])
@@ -40,3 +35,27 @@ def create_project():
         raise CustomError("{} provider isn't avaible".format(post["provider"]))
 
     return True
+
+@api.route('/projects/<int:iid>', methods=['GET'])
+def get_project(iid):
+    try :
+        name = _list_project()[iid - 1]
+    except :
+        raise CustomError("projects {} didn't exist, sorry".format(iid))
+ 
+    obj = AbstractTrack.read(name)
+                          
+    if obj.provider == "github":
+        return toJson(Github.read(name).to_dict())
+    else:
+        raise CustomError("{} provider isn't avaible".format(obj.provider))
+
+
+def _list_project():
+    ret_list = list()
+
+    for entry in os.scandir("."):
+        if entry.is_file() and entry.name.endswith(".pickle"):
+            ret_list.append(entry.name)
+ 
+    return ret_list

@@ -3,7 +3,8 @@ import pickle
 
 class AbstractObject:
     def to_dict(self):
-        return {key: value for key, value in self.__dict__ if not key.startswith("_")}
+        print(self.__dict__)
+        return {key: value for key, value in self.__dict__.items() if not key.startswith("_")}
 
 class Issue(AbstractObject):
     def __init__(self):
@@ -26,7 +27,7 @@ class Milestone(AbstractObject):
         self.open_issue = ""
         self.close_issue = ""
 
-class AbstractTrack:
+class AbstractTrack(AbstractObject):
     def __init__(self, url, provider):
         self.name = "project_name"
         self.provider = provider
@@ -56,7 +57,7 @@ class AbstractTrack:
         pass
 
     def read(filename):
-        with open(filename) as f:
+        with open(filename, "rb") as f:
             return pickle.load(f)
 
     def write(self):
