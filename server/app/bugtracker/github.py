@@ -1,9 +1,7 @@
 import json
 import requests
 
-from .abstract import AbstractTrack, Issue
-
-
+from .abstract import AbstractTrack, Issue, Milestone
 
 class Github(AbstractTrack):
 
@@ -15,7 +13,7 @@ class Github(AbstractTrack):
         self.__github_repo = self.url.split("/")[4]
 
     def issues(self, **args):
-        r = requests.get("https://api.github.com/repos/{}/{}/issues"
+        r = requests.get("https://api.github.com/repos/{}/{}/issues?sate=all"
                         .format(self.__github_user, self.__github_repo))
         
         issues = list()
@@ -27,7 +25,7 @@ class Github(AbstractTrack):
             i.author = val["user"]
             i.state = val["state"]
             i.created = val["created_at"]
-            i.update_at = val["updated_at"]
+            i.closed_at = val["closed_at"]
             issues.append(i.to_dict())
 
         return issues
@@ -43,25 +41,25 @@ class Github(AbstractTrack):
 
     def milestones(self, **args):
         r = requests.get("https://api.github.com/repos/{}/{}/milestones"
-                        .format(self.github_user, self.github_repo))
+                        .format(self.__github_user, self.__github_repo))
         
         milestones = list()
         for val in r.json():
             i = Milestone()
             i.title = val["title"]
             i.description = val["description"]
-            i.url = val["http_url"]
+            i.url = val["html_url"]
             i.state = val["state"]
             i.created = val["created_at"]
-            i.close_at = ["update_at"]
-            i.open_issue = ["open_issue"]
-            i.close_issue = ["close_issue"]
-            milestones.append(i)
+            i.close_at = val["closed_at"]
+            i.open_issue = val["open_issues"]
+            i.close_issue = val["closed_issues"]
+            milestones.append(i.to_dict())
 
         return milestones
 
     def milestone(self, iid):
-        return self.milestone()[iid]
+        return self.milestones()[iid]
 
     def code(self, **args):
         r = requests.get("https://api.github.com/repos/{}/{}/stats/code_frequency".

@@ -67,6 +67,21 @@ def get_issue(iid, issue_id):
         raise CustomError("issue {} didn't exist in project {}, sorry"
                           .format(issue_id, iid))
 
+@api.route('/projects/<int:iid>/milestone', methods=['GET'])
+def get_milestones(iid):
+    project = _get_project(iid)
+
+    return toJson(project.milestones())
+
+@api.route('/projects/<int:iid>/milestone/<int:mil_id>', methods=['GET'])
+def get_milestone(iid, mil_id):
+    project = _get_project(iid)
+    
+    try:
+        return toJson(project.milestone(mil_id))
+    except:
+        raise CustomError("milestone {} didn't exist in project {}, sorry"
+                         .format(mil_id, iid))
 
 def _get_project(iid):
     try :
