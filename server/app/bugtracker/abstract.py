@@ -3,7 +3,6 @@ import pickle
 
 class AbstractObject:
     def to_dict(self):
-        print(self.__dict__)
         return {key: value for key, value in self.__dict__.items() if not key.startswith("_")}
 
 class Issue(AbstractObject):

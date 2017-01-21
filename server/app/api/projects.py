@@ -12,7 +12,7 @@ from io import StringIO,BytesIO
 
 from ..bugtracker.abstract import AbstractTrack
 from ..bugtracker.github import Github
-from datetime import datetime
+from datetime import datetime, timedelta
 
 #================================================================================
 @api.route('/projects/', methods=['GET'])
@@ -58,7 +58,10 @@ def delete_project(iid):
 def get_issues(iid):
     project = _get_project(iid)
 
-    return toJson(project.issues())
+    date_filter = request.args.get('filter', None)
+    param_filter = request.args.get('param', "created")
+    print(date_filter, param_filter)
+    return toJson(_filter_by_date(project.issues(), param_filter, date_filter))
 
 @api.route('/projects/<int:iid>/issues/<int:issue_id>', methods=['GET'])
 def get_issue(iid, issue_id):
@@ -74,7 +77,10 @@ def get_issue(iid, issue_id):
 def get_milestones(iid):
     project = _get_project(iid)
 
-    return toJson(project.milestones())
+    date_filter = request.args.get('filter', None)
+    param_filter = request.args.get('param', "created")
+
+    return toJson(_filter_by_date(project.milestones(), param_filter, date_filter))
 
 @api.route('/projects/<int:iid>/milestone/<int:mil_id>', methods=['GET'])
 def get_milestone(iid, mil_id):
@@ -89,8 +95,10 @@ def get_milestone(iid, mil_id):
 @api.route('/projects/<int:iid>/code')
 def get_code_freq(iid):
     project = _get_project(iid)
+    date_filter = request.args.get('filter', None)
+    param_filter = request.args.get('param', "date")
 
-    return toJson(project.code())
+    return toJson(_filter_by_date(project.code(), param_filter, date_filter))
 
 def _get_project(iid):
     try :
@@ -99,7 +107,7 @@ def _get_project(iid):
         raise CustomError("projects {} didn't exist, sorry".format(iid))
  
     obj = AbstractTrack.read(name)
-                          
+ 
     if obj.provider == "github":
         return Github.read(name)
     else:
@@ -112,4 +120,28 @@ def _list_project():
         if entry.is_file() and entry.name.endswith(".pickle"):
             ret_list.append(entry.name)
  
+    return ret_list
+
+def _filter_by_date(obj_list, parm_name, date_filter):
+    ret_list = list()
+    if date_filter == "day":
+        for obj in obj_list:
+            if obj[parm_name] > (datetime.now() - timedelta(1)):
+                ret_list.append(obj)
+    elif date_filter == "week":
+        for obj in obj_list:
+            if obj[parm_name] > (datetime.now() - timedelta(7)):
+                ret_list.append(obj)
+    elif date_filter == "month":
+        for obj in obj_list:
+            if obj[parm_name] > (datetime.now() - timedelta(30)):
+                ret_list.append(obj)
+  
+    elif date_filter == "year":
+         for obj in obj_list:
+            if obj[parm_name] > (datetime.now() - timedelta(365)):
+                ret_list.append(obj)
+    else:
+        return obj_list
+
     return ret_list

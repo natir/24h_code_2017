@@ -8,7 +8,6 @@ class Github(AbstractTrack):
     def __init__(self, url, provider):
         super().__init__(url, provider)
         self.provider = "github"
-        print(self.url.split("/"))
         self.__github_user = self.url.split("/")[3]
         self.__github_repo = self.url.split("/")[4]
 
@@ -24,8 +23,14 @@ class Github(AbstractTrack):
             i.url = val["html_url"]
             i.author = val["user"]
             i.state = val["state"]
-            i.created = val["created_at"]
-            i.closed_at = val["closed_at"]
+            i.created = datetime.strptime(val["created_at"],
+                                          "%Y-%m-%dT%H:%M:%SZ")
+            if val["closed_at"] == None:
+                i.closed_at = None
+            else:
+                i.closed_at = datetime.strptime(val["closed_at"],
+                                                "%Y-%m-%dT%H:%M:%SZ")
+
             issues.append(i.to_dict())
 
         return issues
@@ -50,8 +55,13 @@ class Github(AbstractTrack):
             i.description = val["description"]
             i.url = val["html_url"]
             i.state = val["state"]
-            i.created = val["created_at"]
-            i.close_at = val["closed_at"]
+            i.created = datetime.strptime(val["created_at"],
+                                          "%Y-%m-%dT%H:%M:%SZ")
+            if val["closed_at"] == None:
+                i.closed_at = None
+            else:
+                i.closed_at = datetime.strptime(val["closed_at"],
+                                            "%Y-%m-%dT%H:%M:%SZ")
             i.open_issue = val["open_issues"]
             i.close_issue = val["closed_issues"]
             milestones.append(i.to_dict())
@@ -68,8 +78,7 @@ class Github(AbstractTrack):
 
         for val in r.json():
             r = dict()
-            date = datetime.fromtimestamp(val[0])
-            r["date"] = str(date.isocalendar()[1])+" "+str(date.year)
+            r["date"] = datetime.fromtimestamp(val[0])
             r["add"] = val[1]
             r["del"] = val[2]
             reponse.append(r)
